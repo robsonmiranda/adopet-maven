@@ -27,49 +27,40 @@ public class AdocaoService {
     @Autowired
     private AdocaoRepository adocaoRepository;
 
-    public List<AdocaoDTO> listarTodos(){
-
+    public List<AdocaoDTO> listarTodos() {
         return adocaoRepository.findAll().stream().map(AdocaoDTO::new).toList();
     }
-    public AdocaoDTO listar(Long id){
-
+    public AdocaoDTO listar(Long id) {
         return adocaoRepository.findById(id).stream().findFirst().map(AdocaoDTO::new).orElse(null);
     }
 
     public void solicitar(SolicitacaoDeAdocaoDTO dto){
         Pet pet = petRepository.getReferenceById(dto.idPet());
         Tutor tutor = tutorRepository.getReferenceById(dto.idTutor());
-
-        //Pet já adotado;
-        if(pet.getAdotado()){
+        // Pet já adotado;
+        if (pet.getAdotado()) {
             throw new AdocaoException("Pet já adotado");
         }
-
-        //Pet com solicitação de adoção em andamento;
+        // Pet com solicitação de adoção em andamento;
         Boolean petAdocaoEmAndamento = adocaoRepository.existsByPetIdAndStatus(dto.idPet(),StatusAdocao.AGUARDANDO_AVALIACAO);
-
-        if(petAdocaoEmAndamento){
+        if (petAdocaoEmAndamento) {
             throw new AdocaoException("Pet com adocão em andamento");
         }
-
-        //Tutor com 2 adoções aprovadas.
-
+        // Tutor com 2 adoções aprovadas.
         Integer tutorAdocoes = adocaoRepository.countByTutorIdAndStatus(dto.idTutor(),StatusAdocao.APROVADO);
-
-        if (tutorAdocoes == 2){
+        if (tutorAdocoes == 2) {
             throw new AdocaoException("Tutor com máximo de adocoes");
         }
-
         adocaoRepository.save(new Adocao(tutor,pet, dto.motivo()));
     }
 
-    public void aprovar(AprovarAdocaoDTO dto){
+    public void aprovar(AprovarAdocaoDTO dto) {
         Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
         adocao.marcarComoAprovada();
         adocao.getPet().marcarComoAdotado();
     }
 
-    public void reprovar(ReprovarAdocaoDTO dto){
+    public void reprovar(ReprovarAdocaoDTO dto) {
         Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
         adocao.marcarComoReprovada(dto.justificativa());
     }

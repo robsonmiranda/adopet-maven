@@ -49,57 +49,41 @@ class AdocaoServiceTest {
     private ArgumentCaptor<Adocao> adocaoCaptor;
 
     @Test
-    void deveriaLancarExcecaoDePetJaAdotadoQuandoSolicitarAdocao(){
-
+    void deveriaLancarExcecaoDePetJaAdotadoQuandoSolicitarAdocao() {
         this.dto = new SolicitacaoDeAdocaoDTO(7l,9l,"Motivo xpto");
-
         given(petRepository.getReferenceById(this.dto.idPet())).willReturn(pet);
         given(pet.getAdotado()).willReturn(true);
-
-
         Assertions.assertThrows(AdocaoException.class, () -> service.solicitar(dto));
     }
 
 
     @Test
-    void deveriaLancarExcecaoDePetComAdocaoEmAndamentoQuandoSolicitarAdocao(){
-
+    void deveriaLancarExcecaoDePetComAdocaoEmAndamentoQuandoSolicitarAdocao() {
         this.dto = new SolicitacaoDeAdocaoDTO(7l,9l,"Motivo xpto");
-
         given(petRepository.getReferenceById(this.dto.idPet())).willReturn(pet);
         given(adocaoRepository.existsByPetIdAndStatus(this.dto.idPet(), StatusAdocao.AGUARDANDO_AVALIACAO)).willReturn(true);
-
         Assertions.assertThrows(AdocaoException.class, () -> service.solicitar(dto));
     }
 
     @Test
     void deveriaLancarExcecaoDeTutorComMaximoDeAdocoesAprovadasQuandoSolicitarAdocao(){
-
         this.dto = new SolicitacaoDeAdocaoDTO(7l,9l,"Motivo xpto");
-
         given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
         given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
         given(adocaoRepository.countByTutorIdAndStatus(dto.idTutor(), StatusAdocao.APROVADO)).willReturn(2);
-
         Assertions.assertThrows(AdocaoException.class, () -> service.solicitar(dto));
     }
 
-
     @Test
-    void deveriaPermitirSolicitarAdocao(){
-
+    void deveriaPermitirSolicitarAdocao() {
         this.dto = new SolicitacaoDeAdocaoDTO(7l,9l,"Motivo xpto");
         given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
         given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
-
         service.solicitar(dto);
-
         then(adocaoRepository).should().save(adocaoCaptor.capture());
         Adocao adocaoSalvada = adocaoCaptor.getValue();
-
         Assertions.assertEquals(pet, adocaoSalvada.getPet());
         Assertions.assertEquals(tutor, adocaoSalvada.getTutor());
         Assertions.assertEquals(dto.motivo(), adocaoSalvada.getMotivo());
     }
-
 }
