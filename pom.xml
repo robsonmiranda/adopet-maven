@@ -59,6 +59,7 @@
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
+	<packaging>war</packaging>
 	<profiles>
 		<profile>
 			<id>dev</id>
@@ -75,7 +76,6 @@
 				<activatedProperties>prod</activatedProperties>
 			</properties>
 		</profile>
-
 	</profiles>
 	<build>
 		<finalName>adopet-api</finalName>
