@@ -100,6 +100,7 @@
 				<version>3.28.0</version>
 				<executions>
 					<execution>
+						<phase>package</phase> Determina que a verificação seja executada na fase package (a fase verify é default)
 						<goals>
 							<goal>check</goal>
 							<goal>cpd-check</goal>

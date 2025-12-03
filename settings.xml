@@ -16,3 +16,10 @@
     </settings>
 	
 <!-- Este arquivo contém a configuração para usar um proxy -->
+<!--
+    id: O identificador único para este proxy.
+    active: Verdadeiro se este proxy estiver ativo.
+    protocol, host, port: O protocolo://host:porta do proxy.
+    username, password: Credenciais do proxy.
+    nonProxyHosts: Esta é uma lista de hosts que não devem ser acessados através de proxy.
+-->
