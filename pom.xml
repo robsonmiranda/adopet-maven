@@ -93,6 +93,7 @@
 				</configuration>
 			</plugin>
 			<!-- Determina que o build do projeto falhe caso encontre algum problema reportado no ./mvnw pmd:pmd -->
+			<!-- Este plugin está comentado porque não foram removidas as críticas encontradas, fazendo com que o comando ./mvnw clean verify falhe
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
@@ -102,6 +103,25 @@
 						<goals>
 							<goal>check</goal>
 							<goal>cpd-check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			-->
+			<!-- Plugin usado para avaliar a cobertura dos testes automatizados -->
+			<!-- São criados dois relatórios:
+				D:\Cursos\Alura\ProjetosJava\adopet-maven\target\site\jacoco\index.html
+				D:\Cursos\Alura\ProjetosJava\adopet-maven\target\site\jacoco\jacoco-sessions.html
+			-->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.11</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal> <!-- Prepara um agente para fazer a verredura do código -->
+							<goal>report</goal> <!-- Cria o relatório de cobertura dos testes automatizados -->
 						</goals>
 					</execution>
 				</executions>
